@@ -1,5 +1,5 @@
 <?php
-namespace Dragonfly\Datasource;
+namespace Dragonfly\Datamapper;
 
 abstract Collection extends \ArrayObject {
 
