@@ -1,0 +1,10 @@
+<?php
+namespace Dragonfly\Network;
+
+class Httprequest extends Url {
+  
+  public function __construct($url = null){
+  
+  }
+  
+}
