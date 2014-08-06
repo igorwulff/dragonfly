@@ -1,7 +1,7 @@
 <?php
 namespace Dragonfly\Network;
 
-class Httprequest extends Url {
+class Httprequest extends Uri {
   
   public function __construct($url = null){
   
