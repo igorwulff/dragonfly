@@ -1,6 +1,6 @@
 <?php
 namespace Dragonfly\Hmvc\Controller;
 
-abstract class Front {
+abstract class Front extends Base {
 
 }
