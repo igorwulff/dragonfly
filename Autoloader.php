@@ -8,19 +8,21 @@ namespace Dragonfly;
  * @subpackage  Framework
  */
 class Autoloader {
-  
-	private $namespace;
+
 	private $pathList = array();
 	private $seperator;
 	private $extensionList = array();
 	
-	public function __construct($namespace, $seperator = "\\", array $extensionList = array('php', 'phtml')){
-		$this->namespace = $namespace;
+	public function __construct(array $pathList = array(), $seperator = "\\", array $extensionList = array('php', 'phtml')){
+		foreach($pathList as $value){
+			$this->addPath($value);
+		}
+		
 		$this->seperator = $seperator;
-	  
-	    foreach($extensionList as $value){
-	      $this->addExtension($value);
-	    }
+		
+		foreach($extensionList as $value){
+			$this->addExtension($value);
+		}
 	}
 	
 	public function addPath($path, $append = true){
@@ -60,7 +62,7 @@ class Autoloader {
 				
 				if(file_exists($filename)){
 					require_once $filename;
-					if(class_exists($name, false)){
+					if(class_exists(str_replace("/", $this->seperator, $name, false)){
 						return true;
 					}
 				}
