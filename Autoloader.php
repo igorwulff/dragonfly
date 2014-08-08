@@ -15,20 +15,36 @@ class Autoloader {
 	private $extensionList = array();
 	
 	public function __construct($namespace, $seperator = "\\", array $extensionList = array('php', 'phtml')){
-	  $this->namespace = $namespace;
-	  $this->seperator = $seperator;
+		$this->namespace = $namespace;
+		$this->seperator = $seperator;
 	  
-    foreach($extensionList as $value){
-      $this->addExtension($value);
-    }
+	    foreach($extensionList as $value){
+	      $this->addExtension($value);
+	    }
 	}
 	
 	public function addPath($path, $append = true){
 		return (bool)$append === true ? array_push($this->pathList, $path) : array_unshift($this->pathList, $path);
 	}
 	
-	public function addExtension($extension){
-		return array_push($this->extensionList, $extension);
+	public function removePath($path){
+		array_key_exists($this->pathList, $path) ? unset($this->pathlist[$path]) : throw new \BadMethodException("Path $path does not exist.");
+	}
+	
+	public function getPathList(){
+		return $this->pathlist;
+	}
+	
+	public function addExtension($extension, $append = true){
+		return (bool)$append === true ? array_push($this->extensionList, $extension) : array_unshift($this->extensionList, $extension);
+	}
+	
+	public function removeExtension($extension){
+		array_key_exists($this->extensionList, $extension) ? unset($this->extensionList[$extension]) : throw new \BadMethodException("Extension $extension does not exist.");
+	}
+	
+	public function getExtensionList(){
+		return $this->extensionList;
 	}
 	
 	public function register(){
@@ -37,22 +53,27 @@ class Autoloader {
 	
 	private function load($name){
 		$filename = '';
+		
 		foreach($this->pathList as $path){
-			$filename = $path.$name.$this->extension;
-			if(file_exists($filename)){
-				require_once $filename;
-				return true;
+			foreach($this->extensionList as $extension){
+				$filename = $path.$name.'.'.extension;
+				
+				if(file_exists($filename)){
+					require_once $filename;
+					if(class_exists($name, false)){
+						return true;
+					}
+				}
 			}
 		}
 
 		if(!file_exists($filename)){
-			throw new \Exception('File '.$filename.' not found');
+			throw new \BadMethodException("File $name not found");
 		} else if(!class_exists($name, false)){
 			// Make sure we throw an Exception so we have a stacktrace
-			throw new \Exception('Class "'.$name.'" not found');
+			throw new \BadMethodException("Class $name not found");
 		}
 
 		return;
 	}
-  
 }
