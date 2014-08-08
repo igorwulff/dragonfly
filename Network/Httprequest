@@ -1,10 +1,80 @@
 <?php
 namespace Dragonfly\Network;
 
-class Httprequest extends Url {
-  
-  public function __construct($url = null){
-  
-  }
-  
+class Httprequest extends Uri {
+
+	protected $data = array('post', 'get', 'input');
+	
+	public function __construct($uri){
+		$this->data = array(
+			'post' => array_merge($_POST, $_FILES),
+			'get' => $_GET,
+		);
+		parse_str(file_get_contents("php://input"), $this->data['input']);
+		
+		if(empty($uri)){
+			$uri = '';
+			
+			if(php_sapi_name() !== 'cli'){
+				$uri = $_SERVER['HTTPS'] === 'on' || $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' || $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on' ? 'https://' : 'http://';
+	
+				if($_SERVER['HTTP_X_FORWARDED_HOST']){
+					$uri.= trim(end(explode(',', $_SERVER['HTTP_X_FORWARDED_HOST'])));
+				} else if($_SERVER['HTTP_HOST']){
+					$uri.= $_SERVER['HTTP_HOST'];
+				} else if($_SERVER['SERVER_NAME']){
+					$uri.= trim(preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME']));
+				} else if($_SERVER['SERVER_ADDR']){
+					$uri.= $_SERVER['SERVER_ADDR'];
+				}
+	
+				$uri.= $_SERVER['REMOTE_PORT'];
+				$uri.= $_SERVER['REQUEST_URI'];
+			} else if(!empty($_SERVER['argv'])){
+				$uri.= $_SERVER['argv'][0];
+				
+				if(count($_SERVER['argv']) > 1){
+					$uri.= http_build_query(array_slice($_SERVER['argv'], 1, null));
+				}
+			}
+		}
+		
+		parent::__construct($uri);
+	}
+	
+	public function parse(){
+		parent::parse();
+
+		if(php_sapi_name() !== 'cli' && is_null($this->getScheme()) && is_null($this->getHost())){
+			throw new \BadMethodCallException('Invalid url: no scheme or host specified.');
+		}
+	}
+	
+	/**
+	 * post, get, head, put, xmlhttprequest, delete
+	 *
+	 */
+	public function isRequestMethod($method){
+		return in_array($method, array(strtolower($_SERVER['REQUEST_METHOD']), strtolower($_SERVER['HTTP_X_REQUESTED_WITH']));
+	}
+	
+	public function getRequestMethod(){
+		return strtolower($_SERVER['REQUEST_METHOD']);
+	}
+	
+	public function getMethodData($method, $key = null){
+		$type = strtolower($method);
+		
+		if($type === 'head'){
+			$type = 'head';
+		} else if($type === 'delete' || $type === 'put'){
+			$type = 'input';
+		}
+		
+		if(array_key_exists($type, $this->data) === false){
+			throw new \BadMethodCallException("Method: $method is invalid.");
+		}
+		
+		return is_null($key) ? $this->data[$type] : $this->data[$type][$key];
+	}
 }

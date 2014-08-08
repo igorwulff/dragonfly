@@ -1,0 +1,8 @@
+<?php
+namespace Dragonfly\Network;
+
+class Ftp extends Uri {
+
+  
+
+}
