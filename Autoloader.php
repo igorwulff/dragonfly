@@ -10,7 +10,7 @@ namespace Dragonfly;
 class Autoloader {
 
 	private $pathList = array();
-	private $seperator;
+	private $seperator = "\\";
 	private $extensionList = array();
 	
 	/**
@@ -91,10 +91,20 @@ class Autoloader {
 	private function load($name){
 		$filename = '';
 		
+		// Iterate through the paths
 		foreach($this->pathList as $path){
+			// Iterate through the extensions
 			foreach($this->extensionList as $extension){
+				/**
+				 * Generate the filename based on the path, the 
+				 * requested filename and the extension
+				 */
 				$filename = $path.$name.'.'.extension;
 				
+				/**
+				 * Load the file if it exists. Return true if the 
+				 * class exists.
+				 */
 				if(file_exists($filename)){
 					require_once $filename;
 					if(class_exists(str_replace("/", $this->seperator, $name, false)){
@@ -110,7 +120,7 @@ class Autoloader {
 			// Make sure we throw an Exception so we have a stacktrace
 			throw new \BadMethodException("Class $name not found");
 		}
-
+		
 		return;
 	}
 }
