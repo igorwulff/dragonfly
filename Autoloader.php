@@ -31,7 +31,13 @@ class Autoloader {
 	 * @param string $path
 	 */
 	public function removePath($path){
-		array_key_exists($this->pathList, $path) ? unset($this->pathlist[$path]) : throw new \BadMethodException("Path $path does not exist.");
+		$index = array_search($this->pathList, $path);
+		
+		if($index === false){
+			throw new \BadMethodException("Path $path does not exist.");	
+		} else {
+			unset($this->pathlist[$index];
+		}
 	}
 	
 	/**
@@ -61,7 +67,13 @@ class Autoloader {
 	 * @param string $extension
 	 */
 	public function removeExtension($extension){
-		array_key_exists($this->extensionList, $extension) ? unset($this->extensionList[$extension]) : throw new \BadMethodException("Extension $extension does not exist.");
+		$index = array_search($this->extensionList, $extension);
+		
+		if($index === false){
+			throw new \BadMethodException("Extension $extension does not exist.");	
+		} else {
+			unset($this->extensionList[$index];
+		}
 	}
 	
 	/**
