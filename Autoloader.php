@@ -21,8 +21,8 @@ class Autoloader {
 	 * 
 	 * @return int Returns the number of paths
 	 */
-	public function addPath($path, $append = true){
-		return (bool)$append === true ? array_push($this->pathList, $path) : array_unshift($this->pathList, $path);
+	public function addPath($path, $seperator, $append = true){
+		return (bool)$append === true ? array_push($this->pathList, array($path => $seperator)) : array_unshift($this->pathList, array($path => $seperator));
 	}
 	
 	/**
