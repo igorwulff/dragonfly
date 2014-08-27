@@ -43,11 +43,15 @@ class Router {
 		return $this->requestUri;
 	}
 	
+	/**
+	 * Load the controller and calls the required action method
+	 * 
+	 * @param Uri $uri
+	 * @param array $params = array()
+	 */
+	public function dispatch(Uri $uri, array $params = array()){
+		
 	
-	public function lookup(Uri $uri){
-		
-		
-		
 	}
   
 }
