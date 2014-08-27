@@ -25,7 +25,7 @@ class Request {
 			$this->uri = $this->getRouter()->getRequestUri();
 			
 			if($this->uri instanceof Httprequest){
-				$this->method = $this->getRouter()->getRequestUri()->getRequestMethod();
+				$this->method = $this->uri->getRequestMethod();
 			}
 		}
 	}
