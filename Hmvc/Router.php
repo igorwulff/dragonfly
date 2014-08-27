@@ -17,11 +17,9 @@ class Router {
   	 * Construct the Router
   	 * 
   	 * @param Uri $requestUri
-  	 * @param array $routes
   	 */ 
-	public function __construct(Uri $requestUri, array $routes = array()){
+	public function __construct(Uri $requestUri){
 		$this->requestUri = $requestUri;
-		$this->setRoutes($routes);
 	}
 	
 	/**
