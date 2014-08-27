@@ -6,6 +6,8 @@ use Dragonfly\Network\Httprequest;
 /**
  * 
  * 
+ * @package    Dragonfly
+ * @subpackage Hmvc
  */
 class Request {
 	
@@ -14,7 +16,7 @@ class Request {
 	protected $method;
 	
 	/**
-	 * 
+	 * Construct the Request
 	 * 
 	 * @param Router $router
 	 */
@@ -30,7 +32,15 @@ class Request {
 		}
 	}
 	
-	public static function create(Uri $uri, $method = 'action'){
+	/**
+	 * Create a new request based on the given uri and method
+	 * 
+	 * @param Uri $uri
+	 * @param string $method = 'index'
+	 * 
+	 * @return Request
+	 */
+	public static function create(Uri $uri, $method = 'index'){
 		$instance = new get_called_class(null);
 		$instance->setUri($uri);
 		$instance->setMethod($method);
@@ -38,41 +48,69 @@ class Request {
 		return $instance;
 	}
 	
+	/**
+	 * @return Router Returns the Router
+	 */ 
 	public function getRouter(){
 		return $this->router;
 	}
 	
+	/**
+	 * @return bool Checks whether the request is a a front controller 
+	 * or a widget controller
+	 */ 
 	public function isHmvc(){
 		return is_null($this->router);
 	}
-
+	
+	/**
+	 * Set the Uri
+	 * 
+	 * @param Uri $uri
+	 */ 	
 	public function setUri(Uri $uri){
 		$this->uri = $uri;
 	}
 	
+	/**
+	 * Set the method
+	 * 
+	 * @param Uri $uri
+	 */ 
 	public function setMethod($method){
-		$method = strtolower($method);
-		if(in_array($method, array('action', 'post', 'get', 'delete', 'head', 'put')) !== false){
-			$this->method = $method;
-		} else {
-			throw new \BadMethodCallException("Invalid method given: $method");	
-		}	
+		$this->method = strtolower($method);
 	}
 	
+	/**
+	 * Returns the method
+	 * 
+	 * @return string
+	 */
 	public function getMethod(){
 		return $this->method;
 	}
 
+	/**
+	 * Returns the used Uri
+	 * 
+	 * @return Uri
+	 */
 	public function getUri(){
 		return $this->uri;
 	}
 	
+	/**
+	 * Send the request. 
+	 * 
+	 * @param array $params = null
+	 */ 
 	public function send(array $params = null){
 		// Set method data from request when no paramaters are given and the request is not a hmvc
 		if($this->isHmvc() === false && is_null($params)){
-			$this->params = $this->getRouter()->getRequestUri()->getData($this->getMethod());
+			$params = $this->getRouter()->getRequestUri()->getData($this->getMethod());
 		}
 		
-		$this->getRouter()->dispatch($this->getUri());
+		// Dispatch the router with the current Uri and given params
+		$this->getRouter()->dispatch($this->getUri(), $params);
 	}
 }
