@@ -13,6 +13,8 @@ class Request {
 	
 	protected $router;
 	protected $uri;
+	protected $parent;
+	protected $controller;
 	protected $method;
 	
 	/**
@@ -106,11 +108,11 @@ class Request {
 	 */ 
 	public function send(array $params = null){
 		// Set method data from request when no paramaters are given and the request is not a hmvc
-		if($this->isHmvc() === false && is_null($params)){
-			$params = $this->getRouter()->getRequestUri()->getData($this->getMethod());
+		if($this->isHmvc() === false){
+			// Dispatch the router with the current Uri and given params
+			$this->getRouter()->dispatch($this->getUri(), $params);
+		} else {
+			
 		}
-		
-		// Dispatch the router with the current Uri and given params
-		$this->getRouter()->dispatch($this->getUri(), $params);
 	}
 }
