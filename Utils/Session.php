@@ -5,17 +5,17 @@ class Session {
   
   private $data;
   
-  public function start(){
-    session_start();
-    $this->data = &$_SESSION;
+	public function start(){
+	  session_start();
+	  $this->data = &$_SESSION;
   }
   
   public function close(){
-			session_unset();
-  		session_destroy();
-  		session_write_close();
-  		setcookie(session_name(), '', 0, '/');
-  		session_regenerate_id(true);
+		session_unset();
+		session_destroy();
+		session_write_close();
+		setcookie(session_name(), '', 0, '/');
+		session_regenerate_id(true);
   }
   
   public function setData(array $data = array()){
