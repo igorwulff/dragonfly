@@ -11,7 +11,6 @@ use Dragonfly\Network\Httprequest;
  */
 class Request {
 	
-	protected $router;
 	protected $uri;
 	protected $parent;
 	protected $controller;
@@ -22,15 +21,15 @@ class Request {
 	 * 
 	 * @param Router $router
 	 */
-	public function __contruct(Router $router = null){
-		$this->router = $router;
+	public function __contruct(Uri $uri, $method = 'index'){
+		$this->uri = $uri;
 		
 		if($this->isHmvc() === false){
-			$this->uri = $this->getRouter()->getRequestUri();
-			
-			if($this->uri instanceof Httprequest){
+			if($this->getUri() instanceof Httprequest){
 				$this->method = $this->uri->getRequestMethod();
 			}
+		} else {
+			$this->method = $method;
 		}
 	}
 	
@@ -58,11 +57,11 @@ class Request {
 	}
 	
 	/**
-	 * @return bool Checks whether the request is a a front controller 
+	 * @return bool Checks whether the request is a front controller 
 	 * or a widget controller
 	 */ 
 	public function isHmvc(){
-		return is_null($this->router);
+		return get_class($this->uri) !== '\Dragonfly\Network\Uri';
 	}
 	
 	/**
