@@ -21,13 +21,12 @@ class Request {
 	 * 
 	 * @param Router $router
 	 */
-	public function __contruct(Uri $uri, $method = 'index'){
+	public function __contruct(Uri $uri, $method = null, Request $parent = null){
 		$this->uri = $uri;
+		$this->parent = $parent;
 		
-		if($this->isHmvc() === false){
-			if($this->getUri() instanceof Httprequest){
-				$this->method = $this->uri->getRequestMethod();
-			}
+		if($this->isHmvc() === false && is_null($method)){
+			$this->method = $this->getUri()->getRequestMethod();
 		} else {
 			$this->method = $method;
 		}
@@ -41,19 +40,9 @@ class Request {
 	 * 
 	 * @return Request
 	 */
-	public static function create(Uri $uri, $method = 'index'){
-		$instance = new get_called_class(null);
-		$instance->setUri($uri);
-		$instance->setMethod($method);
-		
-		return $instance;
-	}
-	
-	/**
-	 * @return Router Returns the Router
-	 */ 
-	public function getRouter(){
-		return $this->router;
+	public function create(Uri $uri, $method = 'index'){
+		$class = get_class($this);
+		return new $class($uri, $method, $this);
 	}
 	
 	/**
@@ -65,21 +54,28 @@ class Request {
 	}
 	
 	/**
-	 * Set the Uri
-	 * 
-	 * @param Uri $uri
-	 */ 	
-	public function setUri(Uri $uri){
-		$this->uri = $uri;
+	 * @return Router Returns the Router
+	 */ 
+	public function getRouter(){
+		// if there is no parent or the request has a router assigned, then return the router else call the parent.
+		
+		if(is_null($this->router)){
+			if(is_null($this->parent)){ // if there is no parent create a router object
+				$this->router = new Router();
+			} else {
+				return $this->getParent()->getRouter();
+			}
+		}
+		
+		return $this->router;
 	}
 	
-	/**
-	 * Set the method
-	 * 
-	 * @param Uri $uri
-	 */ 
-	public function setMethod($method){
-		$this->method = strtolower($method);
+	public function setRouter(Router $router){
+		$this->router = $router;
+	}
+	
+	public function getParent(){
+		return $this->parent;
 	}
 	
 	/**
