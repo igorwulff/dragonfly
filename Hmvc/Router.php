@@ -10,17 +10,9 @@ use Dragonfly\Network\Uri;
  */
 class Router {
   
-	protected $requestUri;
 	protected $routes;
   	
-  	/**
-  	 * Construct the Router
-  	 * 
-  	 * @param Uri $requestUri
-  	 */ 
-	public function __construct(Uri $requestUri){
-		$this->requestUri = $requestUri;
-	}
+
 	
 	/**
 	 * Adds an array of routes to the routes array
@@ -32,13 +24,6 @@ class Router {
 	 */
 	public function addRoutes(array $routes, $append = true){
 		return (bool)$append ? array_push($this->routes, $routes) : array_unshift($this->routes, $routes);
-	}
-	
-	/**
-	 * @return Uri Returns the request Uri
-	 */ 
-	public function getRequestUri(){
-		return $this->requestUri;
 	}
 	
 	/**
