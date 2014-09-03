@@ -75,7 +75,10 @@ class Router implements \SplSubject {
 	 */ 
 	protected function getRoute(Request $request){
 		foreach($this->routeQueue as $route){
-			preg_match($route, $this->request->getUri(), $matches);
+			if(preg_match($route, $this->request->getUri()) === true){
+				$this->routeQueue->top();
+				return $route;
+			}
 		}
 		
 		$this->routeQueue->top();
