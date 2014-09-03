@@ -29,12 +29,11 @@ class Router {
 	/**
 	 * Load the controller and calls the required action method
 	 * 
-	 * @param Uri $uri
+	 * @param Request $request
 	 * @param array $params = array()
 	 */
-	public function dispatch(Uri $uri, array $params = array()){
+	public function dispatch(Request $request, array $params = null){
 		
-	
 	}
   
 }
