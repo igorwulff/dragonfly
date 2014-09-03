@@ -12,8 +12,6 @@ class Router {
   
 	protected $routes;
   	
-
-	
 	/**
 	 * Adds an array of routes to the routes array
 	 * 
@@ -26,6 +24,10 @@ class Router {
 		return (bool)$append ? array_push($this->routes, $routes) : array_unshift($this->routes, $routes);
 	}
 	
+	protected function getRoute(Request $request){
+		
+	}
+	
 	/**
 	 * Load the controller and calls the required action method
 	 * 
@@ -33,7 +35,7 @@ class Router {
 	 * @param array $params = array()
 	 */
 	public function dispatch(Request $request, array $params = null){
-		
+		$route = $this->getRoute($request);
 	}
   
 }
