@@ -13,7 +13,6 @@ class Request {
 	
 	protected $uri;
 	protected $parent;
-	protected $controller;
 	protected $method;
 	
 	/**
