@@ -1,6 +1,25 @@
 <?php
 namespace Dragonfly\Datamapper;
 
-class Service {
+final class Service {
+
+  private $connectionList;
+  
+  public function __construct(){
+    $this->connectionList = array();
+  }
+  
+  public function getConnection($name){
+    
+  }
+  
+  public function createConnection($name, ){
+    
+  }
+  
+  public function deleteConnection($name){
+    
+  }
+
 
 }
