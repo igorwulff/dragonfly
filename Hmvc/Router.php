@@ -8,7 +8,7 @@ use Dragonfly\Network\Uri;
  * @package    Dragonfly
  * @subpackage Hmvc
  */
-class Router {
+class Router implements \SplSubject {
   
 	protected $routes;
   	
