@@ -1,5 +1,5 @@
 <?php
-namespace Dragonfly;
+namespace Dragonfly\Core;
 
 /**
  * The default autoloader used for loading files in the Dragonfly package or other libraries
