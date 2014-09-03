@@ -10,35 +10,41 @@ use Dragonfly\Network\Uri;
  */
 class Router implements \SplSubject {
   
-	protected $routes;
-	protected $observerList;
+	protected $routeQueue;
+	protected $observerStorage;
 	protected $currentRequest;
   	
-  	public function __construct(){
-		$this->observerList = new \SplObjectStorage();
-  	}
-  	
+	public function __construct(){
+		$this->routeQueue = new \SplPriorityQueue();
+		$this->observerStorage = new \SplObjectStorage();
+		$this->observerStorage->setExtractFlags(\SplPriorityQueue::EXTR_BOTH);
+	}
+	
   	/**
   	 * Attach a observer to the list
   	 */ 
     public function attach(\SplObserver $observer) {
-        $this->observerList->attach($observer);
+        $this->observerStorage->attach($observer);
     }
 	
 	/**
 	 * Detach a observer from the list
 	 */
     public function detach(\SplObserver $observer) {
-        $this->observerList->detach($observer);
+        $this->observerStorage->detach($observer);
     }
 	
 	/**
 	 * Notify all observers from the list
 	 */
     public function notify() {
-        foreach ($this->observerList as $observer) {
+        foreach ($this->observerStorage as $observer) {
             $observer->update($this);
         }
+    }
+    
+    public function getObserverStorage(){
+    	return $this->observerStorage;
     }
     
     /*
@@ -56,16 +62,27 @@ class Router implements \SplSubject {
 	 * 
 	 * @return int Returns the number of routes
 	 */
-	public function addRoutes(array $routes, $append = true){
-		return (bool)$append ? array_push($this->routes, $routes) : array_unshift($this->routes, $routes);
+	public function insertRoute($route, $priority){
+		$this->routeQueue->insert($route, $priority);
 	}
 	
 	/**
 	 * Get the current route based on the given request.
 	 * 
+	 * Examples:
+	 * (news)\/[0-9]*
+	 * (news)\/[a-zA-Z\-\_0-9]*
 	 */ 
 	protected function getRoute(Request $request){
+		foreach($this->routeQueue as $route){
+			preg_match($route, $this->request->getUri(), $matches);
+		}
 		
+		$this->routeQueue->top();
+	}
+	
+	public function getRouteQueue(){
+		return $this->routeQueue;
 	}
 	
 	/**
@@ -75,11 +92,16 @@ class Router implements \SplSubject {
 	 * @param array $params = array()
 	 */
 	public function dispatch(Request $request, array $params = null){
+		// Set the current request
 		$this->currentRequest = $request;
 		
+		// notify all observers
 		$this->notify();
 		
+		// get the route based on the request
 		$route = $this->getRoute($request);
+		
+		
 	}
   
 }
