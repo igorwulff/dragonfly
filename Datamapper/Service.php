@@ -1,15 +1,11 @@
 <?php
 namespace Dragonfly\Datamapper;
 
-final class Service {
+final static class Service {
 
-  private $datasourceList;
+  private static $datasourceList = array();
   
-  public function __construct(){
-    $this->datasourceList = array();
-  }
-  
-  public function getDatasource($name){
+  public static function getDatasource($name){
     if(array_key_exists($name, $this->datasourceList) === false){
       throw new \OutOfRangeException("Can't retrieve datasource with name $name, because the datasource doesn't exists.");
     }
@@ -17,26 +13,26 @@ final class Service {
     return $this->datasourceList[$name];
   }
   
-  public function addDatasource($name, Datasource $datasource){
+  public static function addDatasource($name, Datasource $datasource){
     try {
       /*
        * If there is no datasource with this name a \OutOfRangeException is fired, 
        * which means it is allowed to add a new Datasource.
        */
-      $datasource = $this->getDatasource();
+      $datasource = self::getDatasource();
       
       throw new \OutOfRangeException("Datasource with name $name is already in use.");
     } catch(\OutOfRangeException $e){
-       $this->datasourceList[$name] = $datasource;
+       self::$datasourceList[$name] = $datasource;
     }
   }
   
-  public function unsetDatasource($name){
+  public static function unsetDatasource($name){
     try {
-      $datasource = $this->getDatasource();
+      $datasource = self::getDatasource();
       $datasource->disconnect();
       
-      unset($this->datasourceList[$name]);
+      unset(self::datasourceList[$name]);
     } catch(\OutOfRangeException $e){
        throw new \OutOfRangeException("Can't unset the datasource. The datasource with the name $name does not exists.");
     }
