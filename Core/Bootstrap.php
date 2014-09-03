@@ -1,5 +1,5 @@
 <?php
-namespace Dragonfly;
+namespace Dragonfly\Core;
 
 abstract class Bootstrap {
 
