@@ -62,8 +62,8 @@ class Router implements \SplSubject {
 	 * 
 	 * @return int Returns the number of routes
 	 */
-	public function insertRoute($route, $priority){
-		$this->routeQueue->insert($route, $priority);
+	public function insertRoute($regex, $uri, $priority){
+		$this->routeQueue->insert(array('regex' => $regex, 'uri' => $uri), $priority);
 	}
 	
 	/**
@@ -75,9 +75,9 @@ class Router implements \SplSubject {
 	 */ 
 	protected function getRoute(Request $request){
 		foreach($this->routeQueue as $route){
-			if(preg_match($route, $this->request->getUri()) === true){
+			if(preg_match($route['regex'], $this->request->getUri()) === true){
 				$this->routeQueue->top();
-				return $route;
+				return $route['uri'];
 			}
 		}
 		
