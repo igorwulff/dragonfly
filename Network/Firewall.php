@@ -33,7 +33,7 @@ class Firewall implements \SplObserver {
 	public function update(\SplSubject $subject){
 		if($subject instanceof Router){
 			if($this->lookup() === true){
-				$subject->setMethod('accessDeniedFirewall');
+				$subject->getCurrentRequest()->setMethod('accessDeniedFirewall');
 			}
 		}
 	}
