@@ -25,9 +25,9 @@ class Request {
 		$this->parent = $parent;
 		
 		if($this->isHmvc() === false && is_null($method)){
-			$this->method = $this->getUri()->getRequestMethod();
+			$this->setMethod($this->getUri()->getRequestMethod());
 		} else {
-			$this->method = $method;
+			$this->setMethod($method);
 		}
 	}
 	
@@ -84,6 +84,10 @@ class Request {
 	 */
 	public function getMethod(){
 		return $this->method;
+	}
+	
+	public function setMethod($method){
+		$this->method = $method;
 	}
 
 	/**
