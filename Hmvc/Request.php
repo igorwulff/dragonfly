@@ -111,6 +111,6 @@ class Request {
 		}
 		
 		// Dispatch the router with the current Uri and given params
-		$this->getRouter()->dispatch($this, $params);
+		$controller = $this->getRouter()->dispatch($this, $params);
 	}
 }
