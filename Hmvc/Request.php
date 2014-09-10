@@ -24,11 +24,16 @@ class Request {
 		$this->uri = $uri;
 		$this->parent = $parent;
 		
+		/* 
+		 * If the request is a front controller request and no method is given, 
+		 * then give $method the requestmethod from the HttpRequest.
+		 * This can be get, post, put, delete, etc...
+		 */
 		if($this->isHmvc() === false && is_null($method)){
-			$this->setMethod($this->getUri()->getRequestMethod());
-		} else {
-			$this->setMethod($method);
+			$method = $this->getUri()->getRequestMethod();
 		}
+		
+		$this->setMethod($method);
 	}
 	
 	/**
