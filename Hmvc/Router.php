@@ -104,7 +104,9 @@ class Router implements \SplSubject {
 		// get the route based on the request
 		$route = $this->getRoute($request);
 		
-		
+		// Create and return controller...
+		$controller = new $route($params);
+		return $controller;
 	}
   
 }
