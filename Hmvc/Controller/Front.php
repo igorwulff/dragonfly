@@ -8,7 +8,11 @@ abstract class Front extends Base {
     $this->prepareLayout();
   }
   
-  public function prepareLayout(){
+  protected function prepareLayout(){
+    
+  }
+  
+  public function output(){
     
   }
 }
