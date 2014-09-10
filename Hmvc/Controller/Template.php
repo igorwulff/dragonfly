@@ -8,16 +8,13 @@ abstract class Template extends Base {
   public function __construct(Request $request){
     parent::__construct($request);
     $this->controllerStorage = new \SplObjectStorage();
-    $this->prepareLayout();
   }
-  
-  protected abstract function prepareLayout();
-    
-  protected function attachController(Controller $controller){
+
+  protected function attachController(Template $controller){
     $this->controllerStorage->attach($controller);
   }
   
-  protected function detachController(Controller $controller){
+  protected function detachController(Template $controller){
     $this->controllerStorage->detach($controller);
   }
   
@@ -26,6 +23,8 @@ abstract class Template extends Base {
   }
   
   public function output(){
-
+    foreach($this->getControllerStorage() as $controller){
+      $controller->output();
+    }
   }
 }
