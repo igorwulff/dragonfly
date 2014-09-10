@@ -1,7 +1,7 @@
 <?php
 namespace Dragonfly\Hmvc\Controller;
 
-abstract class Front extends Base {
+abstract class Template extends Base {
   
   protected $controllerStorage;
   
