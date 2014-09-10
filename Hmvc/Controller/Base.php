@@ -14,4 +14,5 @@ abstract class Base {
     return $this->request;
   }
 
+  public abstract function output();
 }
