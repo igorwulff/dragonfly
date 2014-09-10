@@ -74,10 +74,18 @@ class Request {
 		return $this->router;
 	}
 	
+	/*
+	 * Assign the router to the request
+	 *
+	 * @param Router $router
+	 */
 	public function setRouter(Router $router){
 		$this->router = $router;
 	}
 	
+	/**
+	 * @return Request Returns the parent Request
+	 */
 	public function getParent(){
 		return $this->parent;
 	}
@@ -91,6 +99,11 @@ class Request {
 		return $this->method;
 	}
 	
+	/**
+	 * Set the method
+	 * 
+	 * @param string $method
+	 */
 	public function setMethod($method){
 		$this->method = $method;
 	}
