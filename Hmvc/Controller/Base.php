@@ -30,7 +30,7 @@ abstract class Base {
   
   public abstract function actionNotFound();
   
-  public abstract function actionAccessDenied();
+  public abstract function actionForbidden();
 
   public abstract function output();
   
