@@ -11,19 +11,6 @@ abstract class Base {
     $this->request = $request;
   }
   
-  protected function displayView($view, $presenter = null){
-    if(is_null($presenter)){
-      $presenter = new Presenter($this, $view);
-    } else {
-      $presenter = new $presenter($this, $view);
-      if(!$presenter instanceof Presenter){
-        throw new \BadMethodException("Invalid presenter given: ".get_class($presenter));
-      }
-    }
-    
-    
-  }
-  
   public function getRequest(){
     return $this->request;
   }
