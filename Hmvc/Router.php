@@ -74,15 +74,17 @@ class Router implements \SplSubject {
 	 * (news)\/[a-zA-Z\-\_0-9]*
 	 */ 
 	protected function getRoute(Request $request){
+		$routeUri = false;
+		
 		foreach($this->routeQueue as $route){
 			if(preg_match($route['regex'], $this->request->getUri()) === true){
-				$this->routeQueue->top();
-				return $route['uri'];
+				$routeUri = $route['uri'];
+				break;
 			}
 		}
 		
 		$this->routeQueue->top();
-		return false;
+		return $routeUri;
 	}
 	
 	public function getRouteQueue(){
