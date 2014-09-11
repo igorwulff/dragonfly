@@ -82,6 +82,7 @@ class Router implements \SplSubject {
 		}
 		
 		$this->routeQueue->top();
+		return false;
 	}
 	
 	public function getRouteQueue(){
@@ -104,24 +105,28 @@ class Router implements \SplSubject {
 		// get the route based on the request
 		$route = $this->getRoute($request);
 		
-		// Create the controller
-		$controller = new $route($this);
-		
-		// Generate the method to be called
-		$method = "action".$request->getMethod();
-		
-		// Check if the method exists and if it is callable. Else throw exception.
-		if(method_exists($controller, $method) !== false && is_callable($controller, $method) !== false){
+		if($route === false){
+			throw new \BadMethodException("Unable to dispatch request. No route found.");
+		} else {
+			// Create the controller
+			$controller = new $route($this);
 			
-			//Call the method in the controller with the given params
+			// Generate the method to be called
+			$method = "action".$request->getMethod();
+			
+			// Check if the method exists and if it is callable else set method to notFound
+			if(method_exists($controller, $method) === false || is_callable($controller, $method) === false){
+				$request->setMethod('notFound');
+				$method = "action".$request->getMethod();
+			}
+			
+			// Call the method in the controller with the given params
 			if(is_null($params)){
 				call_user_func(array($controller, $method));
 			} else {
 				call_user_func_array(array($controller, $method), $params);
 			}	
-		} else {
-			throw new \BadMethodException("Action method $method does not exist or is not callable in Controller "..get_class($controller));
-		}
+		} 
 	}
   
 }
