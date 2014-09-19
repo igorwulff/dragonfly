@@ -29,7 +29,7 @@ class Request {
 		 * then give $method the requestmethod from the HttpRequest.
 		 * This can be get, post, put, delete, etc...
 		 */
-		if($this->isHmvc() === false && is_null($method)){
+		if($this->isWidgetRequest() === false && is_null($method)){
 			$method = $this->getUri()->getRequestMethod();
 		}
 		
@@ -50,11 +50,10 @@ class Request {
 	}
 	
 	/**
-	 * @return bool Checks whether the request is a front controller 
-	 * or a widget controller
+	 * @return bool Checks whether the request is made by a widget controller or the bootstrap
 	 */ 
-	public function isHmvc(){
-		return get_class($this->uri) !== '\Dragonfly\Network\Uri';
+	public function isWidgetRequest(){
+		return get_class($this->uri) === '\Dragonfly\Network\Uri';
 	}
 	
 	/**
@@ -123,8 +122,8 @@ class Request {
 	 * @param array $params = null
 	 */ 
 	public function send(array $params = null){
-		// Set method data from request when no paramaters are given and the request is not a hmvc
-		if($this->isHmvc() === true && is_null($params)){
+		// Set method data from request when no paramaters are given and the request is not a widget request
+		if($this->isWidgetRequest() === false && is_null($params)){
 			$params = $this->getUri()->getMethodData();
 		}
 		
