@@ -1,7 +1,7 @@
 <?php
 namespace Dragonfly\Hmvc\Presenter;
 
-Trait Form {
+class Form extends Base {
   
   
   
