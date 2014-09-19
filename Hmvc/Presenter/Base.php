@@ -3,8 +3,12 @@ namespace Dragonfly\Hmvc\Presenter;
 
 class Base {
   
-  public function url($url){
+  public function route($route){
   
+  }
+  
+  public function url($url){
+    
   }
   
   public function clean($string)(
