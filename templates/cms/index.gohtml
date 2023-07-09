@@ -1,0 +1,33 @@
+{{template "header" .}}
+<h1>Welcome to my awesome site!</h1>
+
+<div id="parent-div">
+    <button hx-get="/clicked"
+        hx-trigger="click"
+        hx-target="#parent-div"
+        hx-swap="outerHTML"
+    >
+        Click Me!
+    </button>
+</div>
+<div hx-get="/clicked" hx-trigger="mouseenter">
+    [Here Mouse, Mouse!]
+</div>
+<input type="text" name="q"
+    hx-get="/clicked"
+    hx-trigger="keyup changed delay:500ms"
+    hx-target="#search-results"
+    placeholder="Search..."
+>
+<div id="search-results"></div>
+
+<div hx-target="this" hx-swap="outerHTML">
+    <div><label>First Name</label>: Joe</div>
+    <div><label>Last Name</label>: Blow</div>
+    <div><label>Email</label>: joe@blow.com</div>
+    <button hx-get="/contact/1/edit" class="btn btn-primary">
+    Click To Edit
+    </button>
+</div>
+
+{{template "footer" .}}

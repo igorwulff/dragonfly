@@ -1,0 +1,30 @@
+{{define "header"}}
+<!doctype html>
+<html lang="en" class="text-gray-900 antialiased leading-tight">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+  <nav class="pt-2 pb-2 border-solid border-b-1 border-slate-700" id="navbar-default">
+    <ul class="flex justify-end text-sm text-blue-500 max-w-screen-xl mx-auto">
+      <li class="ml-5 mr-5">
+        <a class="hover:text-blue-800" href="#">Active</a>
+      </li>|
+      <li class="ml-5 mr-5">
+        <a class="hover:text-blue-800" href="#">Link</a>
+      </li>|
+      <li class="ml-5 mr-5">
+        <a class="hover:text-blue-800" href="#">Link</a>
+      </li>
+    </ul>
+  </nav>
+  <div id="header-content" class="max-w-screen-xl mx-auto pt-5 pb-5">
+    <a href="https://azerty.nl/">
+        <img src="https://azerty.nl/static/version1688446634/frontend/Azerty/default/nl_NL/images/logo.svg" class="h-14" alt="Azerty Logo" />
+    </a>
+  </div>
+{{end}}
