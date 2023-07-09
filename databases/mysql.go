@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"sync"
 
 	"github.com/go-sql-driver/mysql"
@@ -17,11 +16,12 @@ var dbInstance *sql.DB
 func connect() *sql.DB {
 	// Capture connection properties.
 	cfg := mysql.Config{
-		User:   os.Getenv("DBUSER"),
-		Passwd: os.Getenv("DBPASS"),
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "recordings",
+		User:                 "dragonfly",
+		Passwd:               "nNYxP3vti6EMjp",
+		Net:                  "tcp",
+		Addr:                 "127.0.0.1:3306",
+		DBName:               "dragonfly",
+		AllowNativePasswords: true,
 	}
 	// Get a database handle.
 	db, err := sql.Open("mysql", cfg.FormatDSN())
@@ -79,6 +79,10 @@ func NamesStartingWith(name string) ([]Name, error) {
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
+	}
+
+	for _, name := range names {
+		fmt.Println(name.name)
 	}
 	return names, nil
 }

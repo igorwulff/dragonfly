@@ -9,7 +9,7 @@ import (
 )
 
 func InitFaqRouter(r *chi.Mux) {
-	NamesStartingWith()
+	databases.NamesStartingWith("test")
 
 	tplFaq := views.Must(views.ParseFS(templates.FS, "faq/index.gohtml", "layout/*"))
 	r.Get("/faq", controllers.FAQ(tplFaq))
