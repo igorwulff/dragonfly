@@ -13,6 +13,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// https://www.youtube.com/watch?v=LvgVSSpwND8
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)

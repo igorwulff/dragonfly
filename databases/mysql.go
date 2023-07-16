@@ -5,84 +5,82 @@ import (
 	"fmt"
 	"log"
 	"sync"
+	"time"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/go-sql-driver/mysql"
 )
 
 var once sync.Once
 
-var dbInstance *sql.DB
+var db *sql.DB
 
-func connect() *sql.DB {
-	// Capture connection properties.
-	cfg := mysql.Config{
-		User:                 "dragonfly",
-		Passwd:               "nNYxP3vti6EMjp",
-		Net:                  "tcp",
-		Addr:                 "127.0.0.1:3306",
-		DBName:               "dragonfly",
-		AllowNativePasswords: true,
-	}
-	// Get a database handle.
-	db, err := sql.Open("mysql", cfg.FormatDSN())
-	if err != nil {
-		log.Fatal(err)
-	}
+var dbCache *sq.StmtCache
 
-	pingErr := db.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
-	}
-	fmt.Println("Connected!")
+func GetDb() sq.BaseRunner {
+	// StmtCache caches Prepared Stmts for you
 
-	return db
-}
-
-//Port: 3306
-
-func getInstance() *sql.DB {
-	if dbInstance == nil {
+	if dbCache == nil {
 		// Ensure this gets only called once even with goroutines
 		once.Do(
 			func() {
 				fmt.Println("Creating single instance now.")
-				dbInstance = connect()
+
+				// Capture connection properties.
+				cfg := mysql.Config{
+					User:                 "dragonfly",
+					Passwd:               "nNYxP3vti6EMjp",
+					Net:                  "tcp",
+					Addr:                 "127.0.0.1:3306",
+					DBName:               "dragonfly",
+					AllowNativePasswords: true,
+				}
+				// Get a database handle.
+				db, err := sql.Open("mysql", cfg.FormatDSN())
+				db.SetMaxOpenConns(25)
+				db.SetMaxIdleConns(25)
+				db.SetConnMaxLifetime(5 * time.Minute)
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				pingErr := db.Ping()
+				if pingErr != nil {
+					log.Fatal(pingErr)
+				}
+				fmt.Println("Connected!")
+
+				// StmtCache caches Prepared Stmts for you
+				dbCache = sq.NewStmtCache(db)
 			})
 	} else {
 		fmt.Println("Single instance already created.")
 	}
 
-	return dbInstance
+	return dbCache
 }
 
-type Name struct {
+type Person struct {
 	id   int64
 	name string
 }
 
-func NamesStartingWith(name string) ([]Name, error) {
-	// An albums slice to hold data from returned rows.
-	var names []Name
+// Share entities? Golang shared in-memory cache?
+// https://github.com/go-jet/jet
+// https://blog.logrocket.com/how-to-implement-memory-caching-go/
 
-	rows, err := getInstance().Query("SELECT * FROM test WHERE name LIKE ?", fmt.Sprintf("%s%s", name, "%"))
-	if err != nil {
-		return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
-	}
-	defer rows.Close()
-	// Loop through rows, using Scan to assign column data to struct fields.
-	for rows.Next() {
-		var name Name
-		if err := rows.Scan(&name.id, &name.name); err != nil {
-			return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
-		}
-		names = append(names, name)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("albumsByArtist %q: %v", name, err)
-	}
+// https://go101.org/article/concurrent-atomic-operation.html
 
-	for _, name := range names {
-		fmt.Println(name.name)
-	}
-	return names, nil
+// albumsByArtist queries for albums that have the specified artist name.
+func getPersonByName(name string) (Person, error) {
+	var person Person
+	err := sq.
+		Select("id, name").
+		From("test").
+		Where(sq.Like{"name": name + "%"}).
+		Limit(1).
+		RunWith(GetDb()).
+		QueryRow().
+		Scan(&person.id, &person.name)
+	return person, err
 }
