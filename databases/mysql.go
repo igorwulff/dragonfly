@@ -71,8 +71,8 @@ type Person struct {
 
 // https://go101.org/article/concurrent-atomic-operation.html
 
-// albumsByArtist queries for albums that have the specified artist name.
-func getPersonByName(name string) (Person, error) {
+// AlbumsByArtist queries for albums that have the specified artist name.
+func GetPersonByName(name string) (Person, error) {
 	var person Person
 	err := sq.
 		Select("id, name").
