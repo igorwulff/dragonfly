@@ -1,3 +1,6 @@
+{{template "header" .}}
+{{template "menu" .}}
+
 <form hx-put="/contact/1" hx-target="this" hx-swap="outerHTML">
   <div>
     <label>First Name</label>
@@ -14,3 +17,5 @@
   <button class="btn">Submit</button>
   <button class="btn" hx-get="/contact/1">Cancel</button>
 </form>
+
+{{template "footer" .}}
